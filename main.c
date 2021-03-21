@@ -31,41 +31,41 @@
 #include "menupicture.h"
 
 #ifndef M_PI
-#define M_PI                    3.14159265358979323846F //ºê¶¨Òå
+#define M_PI                    3.14159265358979323846F //å®å®šä¹‰
 #endif
-volatile uint32_t key;//°´¼üÖµ
-int score=0;          //¼Æ·Ö
-bool start=0;        //ÓÎÏ·¿ªÊ¼±êÖ¾Î»
-bool flag_bullet=0;  //×Óµ¯±êÖ¾Î»  £¬ÖÃ0±íÊ¾µ±Ç°²»´æÔÚ×Óµ¯
-bool flag_stone=0;   //ÔÉÊ¯±êÖ¾Î»
+volatile uint32_t key;//æŒ‰é”®å€¼
+int score=0;          //è®¡åˆ†
+bool start=0;        //æ¸¸æˆå¼€å§‹æ ‡å¿—ä½
+bool flag_bullet=0;  //å­å¼¹æ ‡å¿—ä½  ï¼Œç½®0è¡¨ç¤ºå½“å‰ä¸å­˜åœ¨å­å¼¹
+bool flag_stone=0;   //é™¨çŸ³æ ‡å¿—ä½
 uint32_t g_ui32SysClock;
-int T_Flag=0; //¶¨Ê±Æ÷É¨Ãè´ÎÊı¼¼Êõ
+int T_Flag=0; //å®šæ—¶å™¨æ‰«ææ¬¡æ•°æŠ€æœ¯
 static volatile unsigned long g_ulTickCount;
 #define SERIES_LENGTH 240
-uint32_t x_stone,x_bullet,x_plane=60;    //×Óµ¯ÔÉÊ¯×ø±ê
+uint32_t x_stone,x_bullet,x_plane=60;    //å­å¼¹é™¨çŸ³åæ ‡
 uint32_t y_stone,y_bullet,y_plane=340;
 uint32_t old_plane[7200];
 
 #define TICKS_PER_SECOND 1000
 #define FSECONDS_PER_TICK (1.0F/(float)TICKS_PER_SECOND)
-void //µÎ´ğ¼ÆÊ±Æ÷ÖĞ¶Ïº¯Êı
+void //æ»´ç­”è®¡æ—¶å™¨ä¸­æ–­å‡½æ•°
 SysTickIntHandler(void)
 {
 	g_ulTickCount++;
 	if(g_ulTickCount>=480)
 		g_ulTickCount=0;
 	}
-void //´®¿Ú³õÊ¼»¯º¯Êı
+void //ä¸²å£åˆå§‹åŒ–å‡½æ•°
 ConfigureUART(void)
 {
 
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);//Ê¹ÄÜGPIOA¿Ú
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);//Ê¹ÄÜ UART0
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);//ä½¿èƒ½GPIOAå£
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);//ä½¿èƒ½ UART0
     GPIOPinConfigure(GPIO_PA0_U0RX);
     GPIOPinConfigure(GPIO_PA1_U0TX);
     UARTStdioConfig(0, 115200, g_ui32SysClock);
 }
-//¶¨Ê±Æ÷ÖĞ¶Ï³õÊ¼»¯º¯Êı
+//å®šæ—¶å™¨ä¸­æ–­åˆå§‹åŒ–å‡½æ•°
 void TimerIntInitial(void)
 {
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
@@ -81,7 +81,7 @@ void TimerIntInitial(void)
 }
 
 
- //»­·É»ú
+ //ç”»é£æœº
  void DrawPlane(x,y){
 
 		uint32_t temp,i,j,m;
@@ -99,7 +99,7 @@ void TimerIntInitial(void)
 		}
 
  }
- //Çå³ı·É»ú
+ //æ¸…é™¤é£æœº
  void ClearPlane(x,y){
      uint32_t temp,i,j,m;
      m = 240*2*y+2*x;
@@ -116,7 +116,7 @@ void TimerIntInitial(void)
          m += 360;
      }
  }
- //ÓÎÏ·¿ªÊ¼½çÃæ
+ //æ¸¸æˆå¼€å§‹ç•Œé¢
  void DrawMenu(){
 
 		start=0;
@@ -135,7 +135,7 @@ void TimerIntInitial(void)
         TFTLCD_Showoption3(55,220,0,WHITE,BLACK);
         TFTLCD_Showoption3(130,220,1,WHITE,BLACK);
  }
- //ÓÎÏ·½áÊøº¯Êı
+ //æ¸¸æˆç»“æŸå‡½æ•°
  void GameOver(){
 		start=0;
 		uint32_t temp,i,j,m;
@@ -155,7 +155,7 @@ void TimerIntInitial(void)
 	 		UARTprintf("Gameover!\n");
 	 		UARTprintf("Your score:%d\n",score);
  }
- //±¬Õ¨
+ //çˆ†ç‚¸
  void DrawBoom(x,y){
 
 		uint32_t temp,i,j,m;
@@ -172,7 +172,7 @@ void TimerIntInitial(void)
 			}
 		}
  }
- //Çå³ı±¬Õ¨
+ //æ¸…é™¤çˆ†ç‚¸
 void ClearBoom(x,y){
     uint32_t temp,i,j,m;
     m = 240*2*y+2*x;
@@ -191,7 +191,7 @@ void ClearBoom(x,y){
 }
 
 
-//ÓÎÏ·½çÃæ
+//æ¸¸æˆç•Œé¢
 void DrawGameback(){
 
        uint32_t temp,i,j,m,x,y;
@@ -211,7 +211,7 @@ void DrawGameback(){
        }
 }
 
-//»­ÔÉÊ¯
+//ç”»é™¨çŸ³
  void DrawStone(x,y){
 		uint32_t temp,i,j,m;
 		m=0;
@@ -227,7 +227,7 @@ void DrawGameback(){
 			}
 		}
  }
- //Çå³ıÔÉÊ¯
+ //æ¸…é™¤é™¨çŸ³
  void ClearStone(x,y){
          uint32_t temp,i,j,m;
          m = 240*2*y+2*x;
@@ -244,7 +244,7 @@ void DrawGameback(){
              m += 360;
          }
   }
- //»­×Óµ¯
+ //ç”»å­å¼¹
  void DrawBullet(x,y){
 		uint32_t temp,i,j,m;
 		m=0;
@@ -260,7 +260,7 @@ void DrawGameback(){
 			}
 		}
  }
- //Çå³ı×Óµ¯
+ //æ¸…é™¤å­å¼¹
  void ClearBullet(x,y){
 	     uint32_t temp,i,j,m;
 	     m = 240*2*y+2*x;
@@ -280,7 +280,7 @@ void DrawGameback(){
  void main()
  {
 
-	    //FPUEnable();//Ê¹ÄÜFPU
+	    //FPUEnable();//ä½¿èƒ½FPU
 	   //FPULazyStackingEnable();
 	    SYSCTL_RCGCGPIO_R |= (SYSCTL_RCGCGPIO_R13 | SYSCTL_RCGCGPIO_R12 | SYSCTL_RCGCGPIO_R11 |SYSCTL_RCGCGPIO_R10| SYSCTL_RCGCGPIO_R7 |SYSCTL_RCGCGPIO_R3 );
 	    g_ui32SysClock = SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ |
@@ -288,9 +288,9 @@ void DrawGameback(){
 	                SYSCTL_CFG_VCO_480), 120000000);
 	    SysTickPeriodSet(g_ui32SysClock / TICKS_PER_SECOND);
 	    IntMasterEnable();
-	    SysTickIntEnable();//Ê¹ÄÜÖĞ¶Ï
-	    SysTickEnable();//Ê¹ÄÜSysTick
-	    ConfigureUART();//³õÊ¼»¯UART
+	    SysTickIntEnable();//ä½¿èƒ½ä¸­æ–­
+	    SysTickEnable();//ä½¿èƒ½SysTick
+	    ConfigureUART();//åˆå§‹åŒ–UART
 	    EPIGPIOinit();
 	    key_init();
 	    TFT_400x240_OTM4001Ainit(g_ui32SysClock);
@@ -298,26 +298,26 @@ void DrawGameback(){
 	    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_0);
 	    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, GPIO_PIN_0);
 	    UARTprintf("Game start!\n");
-	    DrawMenu(); //»­²Ëµ¥
+	    DrawMenu(); //ç”»èœå•
 	    TimerIntInitial();
 	    while(1)
 	    {
 	    	if(start==1)
 	    	{
-	    		//¼Æ·Ö
+	    		//è®¡åˆ†
 		    	TFTLCD_ShowString(50,10,"score:",CYAN,LIGHTBLUE);
 				TFTLCD_ShowData(100,10,score,CYAN,LIGHTBLUE);
 	    	}
 
 	    }
-	  //TFTLCDµÄ²ÎÊıÉèÖÃ
+	  //TFTLCDçš„å‚æ•°è®¾ç½®
 
  }
 
 
   void Timer0BIntHandler(void)
   {
-  	TimerIntClear(TIMER0_BASE, TIMER_TIMB_TIMEOUT);//ÇåÖĞ¶Ï
+  	TimerIntClear(TIMER0_BASE, TIMER_TIMB_TIMEOUT);//æ¸…ä¸­æ–­
   	int a;
   	key=identify_key();
   	a=key;
@@ -329,7 +329,7 @@ void DrawGameback(){
   					{
   						ClearPlane(x_plane, y_plane);
   						DrawPlane(x_plane -=60, y_plane);
-  					}//Ïò×ó
+  					}//å‘å·¦
   					a = 0;
   					break;
   				}
@@ -339,7 +339,7 @@ void DrawGameback(){
   					{
   						ClearPlane(x_plane, y_plane);
   						DrawPlane(x_plane, y_plane += 60);
-  					}//ÏòÏÂ
+  					}//å‘ä¸‹
   					a = 0;
   					break;
   				}
@@ -349,7 +349,7 @@ void DrawGameback(){
   					{
   						ClearPlane(x_plane, y_plane);
   						DrawPlane(x_plane +=60, y_plane);
-  					}//ÏòÓÒ
+  					}//å‘å³
   					a = 0;
   					break;
   				}
@@ -359,7 +359,7 @@ void DrawGameback(){
   					{
   						ClearPlane(x_plane, y_plane);
   						DrawPlane(x_plane, y_plane -= 60);
-  					}//ÏòÉÏ
+  					}//å‘ä¸Š
   					a = 0;
   					break;
   				}
@@ -375,7 +375,7 @@ void DrawGameback(){
   						DrawPlane(x_plane, y_plane);
   						UARTprintf("Game start!\n");
   						score=0;
-  					} //¿ªÊ¼ÓÎÏ·
+  					} //å¼€å§‹æ¸¸æˆ
   					a = 0;
   					break;
   				}
@@ -387,21 +387,21 @@ void DrawGameback(){
   						flag_bullet = 1;
   						x_bullet=x_plane+20;
   						y_bullet=y_plane-20;
-  					}   //·¢Éä×Óµ¯
+  					}   //å‘å°„å­å¼¹
   					a = 0;
   					break;
   				}
   			}
-  	//ÅĞ¶Ï×Óµ¯ÊÇ·ñ»÷ÖĞÔÉÊ¯£¬Èô»÷ÖĞ£¬Ôò±¬Õ¨
+  	//åˆ¤æ–­å­å¼¹æ˜¯å¦å‡»ä¸­é™¨çŸ³ï¼Œè‹¥å‡»ä¸­ï¼Œåˆ™çˆ†ç‚¸
   	if((x_bullet-20)==x_stone&&(y_bullet-y_stone)<70&&flag_bullet==1&&flag_stone==1)
 	{
   		flag_bullet=0;
   		flag_stone=0;
   		int i=0;
   		GPIO_PORTL_DATA_R = 0x01;GPIO_PORTM_DATA_R|=0x20;
-  		DrawBoom(x_stone,y_stone);  //±¬Õ¨
+  		DrawBoom(x_stone,y_stone);  //çˆ†ç‚¸
   		//SysCtlDelay(g_ui32SysClock/3000/500);
-  		while(i++<1000)    //ÑÓ³ÙÒ»»á¶ù
+  		while(i++<1000)    //å»¶è¿Ÿä¸€ä¼šå„¿
   		{}
   		ClearBoom(x_stone,y_stone);
   		GPIO_PORTM_DATA_R&=0xdf;
@@ -409,13 +409,13 @@ void DrawGameback(){
 
   	}
 
-  	//ÅĞ¶ÏÔÉÊ¯ºÍ·É»úÊÇ·ñÏà×²
+  	//åˆ¤æ–­é™¨çŸ³å’Œé£æœºæ˜¯å¦ç›¸æ’
   	if(x_plane==x_stone&&(y_plane-y_stone)<30&&start==1&&flag_stone==1)
 	{
   		int i=0;
   		GPIO_PORTL_DATA_R = 0x01;GPIO_PORTM_DATA_R|=0x20;
-  		DrawBoom(x_stone,y_stone);  //±¬Õ¨
-  		while(i++<1000)    //ÑÓ³ÙÒ»»á¶ù
+  		DrawBoom(x_stone,y_stone);  //çˆ†ç‚¸
+  		while(i++<1000)    //å»¶è¿Ÿä¸€ä¼šå„¿
   		{}
   		ClearBoom(x_stone,y_stone);
   		GPIO_PORTN_DATA_R = 0x00;
@@ -426,7 +426,7 @@ void DrawGameback(){
   }
   void Timer0AIntHandler(void){
  	 TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
- 	 //Ëæ»úÉú³ÉÔÉÊ¯
+ 	 //éšæœºç”Ÿæˆé™¨çŸ³
  	 if(T_Flag++>100)
  	 {
  	if(start==1)
@@ -438,23 +438,23 @@ void DrawGameback(){
  		 DrawStone(s_rand,30);
  		 x_stone=s_rand;
  		 y_stone=30;
- 		 flag_stone=1;//Éú³ÉÔÉÊ¯ºóÔÉÊ¯±êÖ¾Î»ÖÃ1
+ 		 flag_stone=1;//ç”Ÿæˆé™¨çŸ³åé™¨çŸ³æ ‡å¿—ä½ç½®1
  	 }
- 	 //×Óµ¯ÒÆ¶¯
+ 	 //å­å¼¹ç§»åŠ¨
  	 if(y_bullet>0&&y_bullet<340)
  	 {
  		 if(flag_bullet==1)
  		 {
- 			ClearBullet(x_bullet,y_bullet);   //²ÁÈ¥Ö®Ç°µÄ×Óµ¯
- 			DrawBullet(x_bullet,y_bullet-=30);   //»­ÉÏĞÂµÄ×Óµ¯+Ëæ×Å·ÖÊıÔö¸ß¶ø¼ÓËÙ
+ 			ClearBullet(x_bullet,y_bullet);   //æ“¦å»ä¹‹å‰çš„å­å¼¹
+ 			DrawBullet(x_bullet,y_bullet-=30);   //ç”»ä¸Šæ–°çš„å­å¼¹+éšç€åˆ†æ•°å¢é«˜è€ŒåŠ é€Ÿ
  		 }
  	 }
  	 else
  	 {
  		 ClearBullet(x_bullet,y_bullet);
- 		 flag_bullet=0; //Èç¹û×Óµ¯µ½´ï¾¡Í·Î´ÃüÖĞÔÉÊ¯£¬ÉèÖÃ×Óµ¯±êÖ¾Î»Îª0ÒÔ±ãÇå³ı¡£
+ 		 flag_bullet=0; //å¦‚æœå­å¼¹åˆ°è¾¾å°½å¤´æœªå‘½ä¸­é™¨çŸ³ï¼Œè®¾ç½®å­å¼¹æ ‡å¿—ä½ä¸º0ä»¥ä¾¿æ¸…é™¤ã€‚
  	 }
- 	 //ÔÉÊ¯ÒÆ¶¯
+ 	 //é™¨çŸ³ç§»åŠ¨
  	 if(y_stone<340)
  	 {
  		if(flag_stone==1)
