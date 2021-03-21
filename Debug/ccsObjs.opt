@@ -1,0 +1,1 @@
+"./KEY.obj" "./Sine_wave.obj" "./tm4c1294ncpdt_startup_ccs.obj" "./uartstdio.obj" "./EPIinit/EPIinit.obj" "./TFTinit/TFT_400x240_OTM4001A_16bit.obj" "./TOUCHinit/TOUCH_TSC2046.obj" "../tm4c1294ncpdt.cmd" -llibc.a -l"D:/CCS/TivaWare_C_Series-2.1.0.12573/driverlib/ccs/Debug/driverlib.lib" -l"D:/CCS/TivaWare_C_Series-2.1.0.12573/IQmath/ccs/IQmathLib/Debug/IQmathLib.lib" 
